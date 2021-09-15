@@ -1,9 +1,12 @@
 from flask import *
 from connection import conn
 from crypt import verify_password, hash_password
+from test import password_generator
 app =  Flask(__name__)
 app.secret_key = 'Ar%*7_Xg4TQOo@#5'
-
+import pymysql
+con = pymysql.connect(host='localhost', user='root', password='',
+                                               database='property')
 
 
 @app.route('/')
@@ -59,9 +62,8 @@ def changepassword():
                     if newpassword !=confirmpassword:
                         return render_template('changepassword.html', msg='Not Matching - New and Confirm')
                     else:
-                        import pymysql
-                        con = pymysql.connect(host='localhost', user='root', password='',
-                                               database='property')
+
+
                         sql ='UPDATE admin SET password = %s where admin_id = %s'
                         cursor = con.cursor()
                         cursor.execute(sql, (hash_password(newpassword), session_key))
@@ -110,6 +112,55 @@ def login():
                 return render_template('login.html', error = 'Something went wrong,')
     else:
         return render_template('login.html')
+
+
+
+
+@app.route('/addagency', methods = ['POST','GET'])
+def addagency():
+    if request.method == "POST":
+        fname = request.form['fname']
+        lname = request.form['lname']
+        email = request.form['email']
+        tel_office = request.form['tel_office']
+        tel_personal = request.form['tel_personal']
+        company_name = request.form['company_name']
+        password = password_generator()
+        admin_id = session['admin_id']
+        cursor = con.cursor()
+        # check if phone exists
+        sql0 = 'select * from agency where tel_personal = %s'
+        cursor.execute(sql0, (tel_personal))
+        if cursor.rowcount > 0:
+            flash('Personal Phone already in use','warning')
+            return render_template('addagency.html')
+        else:
+            sql = "insert into agency(fname, lname, email, password, tel_office, tel_personal,company_name,admin_id)  values(%s, %s, %s, %s, %s, %s, %s, %s)"
+            try:
+                cursor.execute(sql, (fname, lname, email, hash_password(password), tel_office,
+                                         tel_personal, company_name, admin_id))
+                con.commit()
+                # send sms
+                flash('Agency Add successful','info')
+                from sms import sending
+                sending(tel_personal, password, fname)
+                return render_template('addagency.html')
+
+            except:
+                 flash('Failed', 'danger')
+                 return render_template('addagency.html')
+
+
+
+    else:
+        return render_template('addagency.html')
+
+
+
+
+
+
+
 
 
 

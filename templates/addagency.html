@@ -44,7 +44,7 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Profile</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Add Agency</h1>
                         <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
                     </div>
@@ -52,19 +52,43 @@
                     <!-- Content Row -->
                      <div class="row">
                            <div class="col-md-6">
-                                 <h6><b>PERSONAL PROFILE</b></h6>
-                                 <b>First Name:</b> {{row[1]}} <br> <br>
-                                 <b>Second Name</b>: {{row[2]}} <br><br>
-                                 <b>Email:</b> {{row[3]}} <br><br>
-                                 <b>Tel:</b> {{row[7]}} <br><br>
-                                 <h6><b>Account Details</b></h6>
-                                 <bk>Active Status:</bk> {{row[5]}} <br><br>
-                                 <b>Registration Date:</b> {{row[6]}} <br><br>
-                                <a href="/changepassword" class="btn btn-info">Change Password</a>
+                            {% with messages = get_flashed_messages(with_categories=true) %}
+                              {% if messages %}
+                                {% for category, message in messages %}
+                                   <div class="alert alert-{{ category }}" role="alert">
+                                       {{ message }}
+                                   </div>
+                                {% endfor %}
+                              {% endif %}
+                            {% endwith %}
+
+                               <form action="/addagency" method="post">
+                                   <input type="text" name="fname"
+                                          placeholder="First Name" class="form-control"> <br>
+
+                                   <input type="text" name="lname"
+                                          placeholder="Second Name" class="form-control"> <br>
+
+                                    <input type="email" name="email"
+                                          placeholder="Email" class="form-control"> <br>
+
+                                   <input type="tel" name="tel_office"
+                                          placeholder="Office Number" class="form-control"> <br>
+
+                                   <input type="tel" name="tel_personal"
+                                          placeholder="Personal Number" class="form-control"> <br>
+
+                                   <input type="text" name="company_name"
+                                          placeholder="Company Name" class="form-control"> <br>
+
+                                   <input type="submit" value="ADD AGENCY" class="btn btn-info">
+                               </form>
                            </div>
                      </div>
                     <!-- Content Row -->
+
                     <!-- Content Row -->
+
                 </div>
                 <!-- /.container-fluid -->
 
