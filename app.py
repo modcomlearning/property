@@ -159,6 +159,44 @@ def addagency():
 
 
 
+@app.route('/search_agencies', methods = ['POST','GET'])
+def search_agencies():
+    if request.method == 'POST':
+        email = request.form['email']
+        sql = 'select * from agency where email = %s'
+        cursor = conn().cursor()
+        cursor.execute(sql, (email))
+        # check if no agency found
+        if cursor.rowcount == 0:
+            return render_template('search_agencies.html', msg='No Records')
+        else:
+            rows = cursor.fetchall()
+            return render_template('search_agencies.html', rows=rows)
+
+    else:
+        sql = 'select * from agency order by reg_date DESC'
+        cursor = conn().cursor()
+        cursor.execute(sql)
+        # check if no agency found
+        if cursor.rowcount == 0:
+            return render_template('search_agencies.html', msg = 'No Records')
+        else:
+            rows = cursor.fetchall()
+            return render_template('search_agencies.html', rows = rows)
+
+
+
+@app.route('/delete_agency/<agency_id>')
+def delete_agency(agency_id):
+    sql = 'delete from agency where agency_id = %s'
+    cursor = con.cursor()
+    cursor.execute(sql,(agency_id))
+    con.commit()
+    flash('Deleted successful', 'info')
+    return redirect('/search_agencies')
+
+
+
 
 
 

@@ -44,51 +44,63 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Add Agency</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Agencies</h1>
                         <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+
                     </div>
 
                     <!-- Content Row -->
                      <div class="row">
-                           <div class="col-md-6">
-                            {% with messages = get_flashed_messages(with_categories=true) %}
+                           <div class="col-md-12">
+
+                               {% with messages = get_flashed_messages(with_categories=true) %}
                               {% if messages %}
                                 {% for category, message in messages %}
                                    <div class="alert alert-{{ category }}" role="alert">
                                        {{ message }}
-                                   </div>
-                                {% endfor %}
-                              {% endif %}
-                            {% endwith %}
+                                       </div>
+                                    {% endfor %}
+                                  {% endif %}
+                                {% endwith %}
 
-                               <form action="/addagency" method="post">
-                                   <input type="text" name="fname"
-                                          placeholder="First Name" class="form-control" required> <br>
+                               {% if rows %}
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Email</th>
+                                        <th>Active</th>
+                                        <th>Phone</th>
+                                        <th>Company</th>
+                                    </tr>
+                                    {% for row in rows %}
+                                        <tr>
+                                             <td>{{row[1]}}</td>
+                                             <td>{{row[2]}}</td>
+                                             <td>{{row[3]}}</td>
+                                             <td>{{row[5]}}</td>
+                                             <td>{{row[9]}}</td>
+                                             <td>{{row[10]}}</td>
+                                             <td>
+                                                 <a href="/delete_agency/{{row[0]}}" onclick="return confirm('Are you sure');">
+                                                       <i class="fas fa-trash-alt"></i>
+                                                 </a>
+                                             </td>
+                                             <td>
+                                                 <i class="far fa-edit"></i>
+                                             </td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                               {% else %}
+                                {{msg}}
+                               {% endif %}
 
-                                   <input type="text" name="lname"
-                                          placeholder="Second Name" class="form-control" required> <br>
-
-                                    <input type="email" name="email"
-                                          placeholder="Email" class="form-control" required> <br>
-
-                                   <input type="tel" name="tel_office"
-                                          placeholder="Office Number" class="form-control" required> <br>
-
-                                   <input type="tel" name="tel_personal"
-                                          placeholder="Personal Number" class="form-control" required> <br>
-
-                                   <input type="text" name="company_name"
-                                          placeholder="Company Name" class="form-control" required> <br>
-
-                                   <input type="submit" value="ADD AGENCY" class="btn btn-info">
-                               </form>
                            </div>
                      </div>
                     <!-- Content Row -->
-
                     <!-- Content Row -->
-
                 </div>
                 <!-- /.container-fluid -->
 
